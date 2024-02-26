@@ -5,11 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="60da611f-a282-46fd-86e6-f7d3f00fbe91" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cookie.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/item_cursor.png" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/shop_items/shop_item_bakery.png" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/shop_items/shop_item_cursor.png" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/shop_items/shop_item_oven.png" beforeDir="false" />

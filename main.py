@@ -33,6 +33,7 @@ FPS = 30
 cookies = 0
 enlarge = False
 shop_scroll = 0
+shop_keeper = [0, 0, 0, 0]
 
 def write(text):
     write_line = font.render("Cookies: " + str(text), False, (0, 0, 0))
@@ -61,6 +62,13 @@ def show_buttons(shop_scroll):
         screen.blit(shop_bakery, (500, 375 + shop_scroll))
 
 
+def shop_updater(shop_keeper, x, y, shop_scroll):
+    bg_colour = screen.get_at((x, y))[:3]
+    item_index = (shop_scroll * -1) // 120 + (y-15) // 120
+    if bg_colour != (4, 146, 194):
+        shop_keeper[item_index] += 1
+    print(shop_keeper)
+    return shop_keeper
 
 
 while running:
@@ -77,15 +85,19 @@ while running:
             running = False
 
         if event.type == pygame.MOUSEBUTTONUP:
+
             if event.button == 1 and 75 <= x <= 325 and 90 <= y <= 340:
                 cookies += 1
 
-            elif 480 <= x <= 820:
+            elif (event.button == 4 or event.button == 5) and 480 <= x <= 820:
                 if event.button == 4 and shop_scroll < 0:
-                    shop_scroll += 45
+                    shop_scroll += 120
 
                 elif event.button == 5:
-                    shop_scroll -= 45
+                    shop_scroll -= 120
+
+            elif event.button == 1 and 500 <= x <= 800 and y > 14:
+                shop_keeper = shop_updater(shop_keeper, x, y, shop_scroll)
 
     screen.fill((4, 146, 194))
     write(cookies)
