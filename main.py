@@ -34,6 +34,7 @@ cookies = 0
 enlarge = False
 shop_scroll = 0
 shop_keeper = [0, 0, 0, 0]
+shop_prices = [10, 100, 1000, 10000]
 frame_iteration = 0
 
 def write(text):
@@ -63,13 +64,15 @@ def show_buttons(shop_scroll):
         screen.blit(shop_bakery, (500, 375 + shop_scroll))
 
 
-def shop_updater(shop_keeper, x, y, shop_scroll):
+def shop_updater(shop_keeper, x, y, shop_scroll, cookies):
     bg_colour = screen.get_at((x, y))[:3]
     item_index = (shop_scroll * -1) // 120 + (y-15) // 120
     if bg_colour != (4, 146, 194):
-        shop_keeper[item_index] += 1
+        if shop_prices[item_index] <= cookies:
+            shop_keeper[item_index] += 1
+            cookies -= shop_prices[item_index]
     print(shop_keeper)
-    return shop_keeper
+    return shop_keeper, cookies
 
 
 while running:
@@ -105,7 +108,7 @@ while running:
                     shop_scroll -= 120
 
             elif event.button == 1 and 500 <= x <= 800 and y > 14:
-                shop_keeper = shop_updater(shop_keeper, x, y, shop_scroll)
+                shop_keeper, cookies = shop_updater(shop_keeper, x, y, shop_scroll, cookies)
 
     screen.fill((4, 146, 194))
     write(cookies)
