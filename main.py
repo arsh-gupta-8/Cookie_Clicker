@@ -14,6 +14,7 @@ pygame.display.set_caption("Cookie Clicker")
 cookie_img = pygame.image.load("cookie.png")
 cookie = pygame.transform.scale(cookie_img, (250, 250))
 cookie2 = pygame.transform.scale(cookie_img, (300, 300))
+
 # Shop items already have correct dimensions
 shop_cursor = pygame.image.load("shop_items/shop_item_cursor.png")
 shop_tree = pygame.image.load("shop_items/shop_item_tree.png")
@@ -30,15 +31,27 @@ running = True
 FPS = 30
 
 # Game Setting
-cookies = 0
+cookies = 1000000000000000000000000000000000
 enlarge = False
 shop_scroll = 0
 shop_keeper = [0, 0, 0, 0]
-shop_prices = [10, 100, 1000, 10000]
+shop_prices = [10, 100, 1000, 100000]
 frame_iteration = 0
+quantity_suffix = ["", "K", "M", "B", "T", "Qd", "Qn", "Sx", "Hept", "Oct", "Non", "Dec"]
 
-def write(text):
-    write_line = font.render("Cookies: " + str(text), False, (0, 0, 0))
+def write(cookies):
+    str_cookies = str(cookies)
+    quant = quantity_suffix[(len(str_cookies)-1)//3]
+    dec_places = (len(str_cookies)) % 3
+    str_rep = "Cookies: "
+    if dec_places == 0:
+        str_rep += str_cookies[:3]
+    elif dec_places == 2:
+        str_rep += str_cookies[:2] + "." + str_cookies[3]
+    else:
+        str_rep += str_cookies[0] + "." + str_cookies[1:3]
+    str_rep += " " + quant
+    write_line = font.render(str_rep, False, (0, 0, 0))
     screen.blit(write_line, (0, 0))
 
 def show_buttons(shop_scroll):
