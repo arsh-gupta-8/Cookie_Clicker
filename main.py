@@ -34,6 +34,7 @@ cookies = 0
 enlarge = False
 shop_scroll = 0
 shop_keeper = [0, 0, 0, 0]
+frame_iteration = 0
 
 def write(text):
     write_line = font.render("Cookies: " + str(text), False, (0, 0, 0))
@@ -78,6 +79,13 @@ while running:
         enlarge = True
     else:
         enlarge = False
+
+    frame_iteration += 1
+
+    if frame_iteration == 30:
+        for i in range(len(shop_keeper)):
+            cookies += shop_keeper[i] * 10**i
+        frame_iteration = 0
 
     for event in pygame.event.get():
 
