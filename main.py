@@ -13,17 +13,19 @@ pygame.display.set_caption("Cookie Clicker")
 # Image imports
 cookie_img = pygame.image.load("cookie.png")
 cookie = pygame.transform.scale(cookie_img, (250, 250))
-cookie2 = pygame.transform.scale(cookie_img, (300, 300))
+cookie_enlarged = pygame.transform.scale(cookie_img, (300, 300))
 
 # Shop items already have correct dimensions
-shop_cursor = pygame.image.load("shop_items/shop_item_cursor.png")
-shop_tree = pygame.image.load("shop_items/shop_item_tree.png")
-shop_oven = pygame.image.load("shop_items/shop_item_oven.png")
-shop_bakery = pygame.image.load("shop_items/shop_item_bakery.png")
-cursor_resize = pygame.transform.scale(shop_cursor, (310, 110))
-tree_resize = pygame.transform.scale(shop_tree, (310, 110))
-oven_resize = pygame.transform.scale(shop_oven, (310, 110))
-bakery_resize = pygame.transform.scale(shop_bakery, (310, 110))
+shop_item_icons = []
+shop_item_icons_enlarged = []
+
+shop_item_icons.append(pygame.image.load("shop_items/shop_item_cursor.png"))
+shop_item_icons.append(pygame.image.load("shop_items/shop_item_tree.png"))
+shop_item_icons.append(pygame.image.load("shop_items/shop_item_oven.png"))
+shop_item_icons.append(pygame.image.load("shop_items/shop_item_bakery.png"))
+
+for item in shop_item_icons:
+    shop_item_icons_enlarged.append(pygame.transform.scale(item, (310, 110)))
 
 # Loop Start
 clock = pygame.time.Clock()
@@ -54,27 +56,13 @@ def write(cookies):
     write_line = font.render(str_rep, False, (0, 0, 0))
     screen.blit(write_line, (0, 0))
 
-def show_buttons(shop_scroll):
-    if enlarge == True:
-        screen.blit(cookie2, (50, 65))
+
+def show_buttons(shop_scroll, item_key):
+    difference = item_key*120
+    if 500 <= x <= 800 and (20 + difference) + shop_scroll <= y <= 120 + difference + shop_scroll:
+        screen.blit(shop_item_icons_enlarged[item_key], (495, 15 + difference + shop_scroll))
     else:
-        screen.blit(cookie, (75, 90))
-    if 500 <= x <= 800 and 15 + shop_scroll <= y <= 115 + shop_scroll:
-        screen.blit(cursor_resize, (495, 10 + shop_scroll))
-    else:
-        screen.blit(shop_cursor, (500, 15 + shop_scroll))
-    if 500 <= x <= 800 and 135 + shop_scroll <= y <= 235 + shop_scroll:
-        screen.blit(tree_resize, (495, 130 + shop_scroll))
-    else:
-        screen.blit(shop_tree, (500, 135 + shop_scroll))
-    if 500 <= x <= 800 and 255 + shop_scroll <= y <= 355 + shop_scroll:
-        screen.blit(oven_resize, (495, 250 + shop_scroll))
-    else:
-        screen.blit(shop_oven, (500, 255 + shop_scroll))
-    if 500 <= x <= 800 and 375 + shop_scroll <= y <= 475 + shop_scroll:
-        screen.blit(bakery_resize, (495, 370 + shop_scroll))
-    else:
-        screen.blit(shop_bakery, (500, 375 + shop_scroll))
+        screen.blit(shop_item_icons[item_key], (500, 20 + difference + shop_scroll))
 
 
 def shop_updater(shop_keeper, x, y, shop_scroll, cookies):
@@ -125,7 +113,12 @@ while running:
 
     screen.fill((4, 146, 194))
     write(cookies)
-    show_buttons(shop_scroll)
+    if 75 <= x <= 325 and 90 <= y <= 340:
+        screen.blit(cookie_enlarged, (50, 65))
+    else:
+        screen.blit(cookie, (75, 90))
+    for item_key in range(len(shop_item_icons)):
+        show_buttons(shop_scroll, item_key)
     pygame.display.update()
     clock.tick(FPS)
 
