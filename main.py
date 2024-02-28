@@ -4,7 +4,8 @@ pygame.init()
 
 # Text
 pygame.font.init()
-font = pygame.font.SysFont('Comic Sans MS', 30)
+cookie_display_font = pygame.font.SysFont('Comic Sans MS', 30)   # For Cookie Amount Display
+stat_display_font = pygame.font.SysFont('Raleway Bold', 25)   # For Stat Display
 
 # Screen
 screen = pygame.display.set_mode((1000, 500))
@@ -33,36 +34,66 @@ running = True
 FPS = 30
 
 # Game Setting
-cookies = 1000000000000000000000000000000000
+cookies = 0
 enlarge = False
 shop_scroll = 0
-shop_keeper = [0, 0, 0, 0]
-shop_prices = [10, 100, 1000, 100000]
+shop_keeper = []
+shop_prices = []
+item_clicks_storage = []
+item_click_rate = []
+for num in range(len(shop_item_icons)):
+    shop_keeper.append(0)
+    shop_prices.append(int("1" + "0" * (num + 1)))
+    item_clicks_storage.append(0)
+    item_click_rate.append(shop_prices[num]//10)
 frame_iteration = 0
 quantity_suffix = ["", "K", "M", "B", "T", "Qd", "Qn", "Sx", "Hept", "Oct", "Non", "Dec"]
 
+
+def decimal_divider(string):
+    if len(string) > 3:
+        str_rep = ""
+        quant = quantity_suffix[(len(string) - 1) // 3]
+        dec_places = (len(string)) % 3
+        if dec_places == 0:
+            str_rep += string[:3]
+        elif dec_places == 2:
+            if string[2] == '0':
+                str_rep += string[:2]
+            else:
+                str_rep += string[:2] + "." + string[3]
+        else:
+            if string[2] == '0':
+                if string[1] == '0':
+                    str_rep += string[0]
+                else:
+                    str_rep += string[0] + "." + string[1]
+            else:
+                str_rep += string[0] + "." + string[1:3]
+        str_rep += " " + quant
+    else:
+        str_rep = string
+    return str_rep
+
+
 def write(cookies):
     str_cookies = str(cookies)
-    quant = quantity_suffix[(len(str_cookies)-1)//3]
-    dec_places = (len(str_cookies)) % 3
-    str_rep = "Cookies: "
-    if dec_places == 0:
-        str_rep += str_cookies[:3]
-    elif dec_places == 2:
-        str_rep += str_cookies[:2] + "." + str_cookies[3]
-    else:
-        str_rep += str_cookies[0] + "." + str_cookies[1:3]
-    str_rep += " " + quant
-    write_line = font.render(str_rep, False, (0, 0, 0))
+    cookie_display_str = "Cookies: " + decimal_divider(str_cookies)
+    write_line = cookie_display_font.render(cookie_display_str, False, (0, 0, 0))
     screen.blit(write_line, (0, 0))
 
 
-def show_buttons(shop_scroll, item_key):
+def show_buttons(shop_scroll, item_key, item_click_rate, shop_prices, shop_keeper, item_clicks_storage):
     difference = item_key*120
     if 500 <= x <= 800 and (20 + difference) + shop_scroll <= y <= 120 + difference + shop_scroll:
         screen.blit(shop_item_icons_enlarged[item_key], (495, 15 + difference + shop_scroll))
     else:
         screen.blit(shop_item_icons[item_key], (500, 20 + difference + shop_scroll))
+    data_list = [item_click_rate, shop_prices, shop_keeper, item_clicks_storage]
+    str_list = ["Cookies/S: ", "Price: ", "Owned: ", "Cooked: "]
+    for display_data in range(4):
+        stat_display_string = stat_display_font.render(str_list[display_data] + decimal_divider(str(data_list[display_data])), False, (150, 75, 0))
+        screen.blit(stat_display_string, (830, 24 + difference + 25 * display_data + shop_scroll))
 
 
 def shop_updater(shop_keeper, x, y, shop_scroll, cookies):
@@ -88,7 +119,9 @@ while running:
 
     if frame_iteration == 30:
         for i in range(len(shop_keeper)):
-            cookies += shop_keeper[i] * 10**i
+            add_amount = shop_keeper[i] * 10**i
+            cookies += add_amount
+            item_clicks_storage[i] += add_amount
         frame_iteration = 0
 
     for event in pygame.event.get():
@@ -118,7 +151,7 @@ while running:
     else:
         screen.blit(cookie, (75, 90))
     for item_key in range(len(shop_item_icons)):
-        show_buttons(shop_scroll, item_key)
+        show_buttons(shop_scroll, item_key, item_click_rate[item_key], shop_prices[item_key], shop_keeper[item_key], item_clicks_storage[item_key])
     pygame.display.update()
     clock.tick(FPS)
 
