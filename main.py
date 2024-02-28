@@ -14,7 +14,9 @@ pygame.display.set_caption("Cookie Clicker")
 # Image imports
 cookie_img = pygame.image.load("cookie.png")
 cookie = pygame.transform.scale(cookie_img, (250, 250))
-cookie_enlarged = pygame.transform.scale(cookie_img, (300, 300))
+cookie_enlarged = pygame.transform.scale(cookie_img, (270, 270))
+cookie_x = 125
+cookie_y = 75
 
 # Shop items already have correct dimensions
 shop_item_icons = []
@@ -76,11 +78,12 @@ def decimal_divider(string):
     return str_rep
 
 
-def write(cookies):
+def print_cookie_count(cookies):
     str_cookies = str(cookies)
     cookie_display_str = "Cookies: " + decimal_divider(str_cookies)
     write_line = cookie_display_font.render(cookie_display_str, False, (0, 0, 0))
-    screen.blit(write_line, (0, 0))
+    cookie_counter_width = write_line.get_width()
+    screen.blit(write_line, (500//2 - cookie_counter_width//2, 0))
 
 
 def show_buttons(shop_scroll, item_key, item_click_rate, shop_prices, shop_keeper, item_clicks_storage):
@@ -93,7 +96,8 @@ def show_buttons(shop_scroll, item_key, item_click_rate, shop_prices, shop_keepe
     str_list = ["Cookies/S: ", "Price: ", "Owned: ", "Cooked: "]
     for display_data in range(4):
         stat_display_string = stat_display_font.render(str_list[display_data] + decimal_divider(str(data_list[display_data])), False, (150, 75, 0))
-        screen.blit(stat_display_string, (830, 24 + difference + 25 * display_data + shop_scroll))
+        str_width = stat_display_string.get_width()
+        screen.blit(stat_display_string, (800 + 200//2 - str_width//2, 24 + difference + 25 * display_data + shop_scroll))
 
 
 def shop_updater(shop_keeper, x, y, shop_scroll, cookies):
@@ -145,11 +149,11 @@ while running:
                 shop_keeper, cookies = shop_updater(shop_keeper, x, y, shop_scroll, cookies)
 
     screen.fill((4, 146, 194))
-    write(cookies)
-    if 75 <= x <= 325 and 90 <= y <= 340:
-        screen.blit(cookie_enlarged, (50, 65))
+    print_cookie_count(cookies)
+    if cookie_x <= x <= cookie_x+250 and cookie_y <= y <= cookie_y+250:
+        screen.blit(cookie_enlarged, (cookie_x-10, cookie_y-10))
     else:
-        screen.blit(cookie, (75, 90))
+        screen.blit(cookie, (cookie_x, cookie_y))
     for item_key in range(len(shop_item_icons)):
         show_buttons(shop_scroll, item_key, item_click_rate[item_key], shop_prices[item_key], shop_keeper[item_key], item_clicks_storage[item_key])
     pygame.display.update()
